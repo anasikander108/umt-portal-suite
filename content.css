@@ -1,0 +1,1469 @@
+/* ============================================================
+   UMT Portal Suite – content.css  v5
+   Apple-style glass interface for online.umt.edu.pk
+   Font: the native system stack (SF Pro on Apple, Segoe UI on Windows,
+         Roboto on Android/ChromeOS). No web fonts are downloaded.
+   ============================================================ */
+
+/* ── Design tokens (shared by the app shell and the login page) ── */
+#umt-redesign-root,
+body.umt-login-redesigned {
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --blue:        #0071e3;
+  --blue-hover:  #0077ed;
+  --blue-press:  #006edb;
+  --blue-soft:   rgba(0, 113, 227, 0.10);
+
+  --text:        #1d1d1f;
+  --text-2:      #515154;
+  --text-3:      #6e6e73;
+  --hairline:    rgba(0, 0, 0, 0.08);
+
+  --glass:        rgba(255, 255, 255, 0.64);
+  --glass-strong: rgba(255, 255, 255, 0.86);
+  --glass-edge:   rgba(255, 255, 255, 0.72);
+  --blur:         blur(28px) saturate(180%);
+  --shadow-glass: inset 0 1px 0 rgba(255, 255, 255, 0.85),
+                  0 12px 40px rgba(20, 30, 60, 0.08),
+                  0 1px 3px rgba(20, 30, 60, 0.06);
+
+  --r-xl: 30px;
+  --r-lg: 24px;
+  --r-md: 16px;
+  --r-sm: 12px;
+
+  --sidebar-w: 264px;
+  --header-h:  60px;
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* ── Inline SVG icon base (used inside and outside the app shell) ── */
+.umt-i {
+  width: 1em;
+  height: 1em;
+  display: block;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  overflow: visible;
+}
+
+/* ── Reset & hide original UI ── */
+#umt-redesign-root * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hide the original portal layout on the dashboard (hidden, never removed,
+   so the portal's scripts and session keep working) */
+body.umt-redesigned > *:not(#umt-redesign-root):not(script):not(style):not(link) {
+  display: none !important;
+}
+
+/* ── Page canvas ── */
+body.umt-redesigned,
+body.umt-skinned {
+  margin: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
+  min-height: 100% !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  background-color: #f5f5f7 !important;
+  background-image:
+    radial-gradient(900px 520px at 8% -6%,  rgba(0, 113, 227, 0.18), transparent 70%),
+    radial-gradient(760px 480px at 96% 4%,  rgba(175, 130, 255, 0.16), transparent 70%),
+    radial-gradient(820px 520px at 70% 104%, rgba(52, 199, 220, 0.16), transparent 70%) !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+}
+
+/* Root must NOT create a stacking context: Bootstrap modals/backdrops on
+   inner pages depend on being able to sit above everything else. */
+#umt-redesign-root {
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
+  overflow: visible;
+}
+
+#umt-redesign-root a { color: inherit; text-decoration: none !important; }
+#umt-redesign-root button { font-family: inherit; }
+#umt-redesign-root h1,
+#umt-redesign-root h2 { font-family: inherit; }
+#umt-redesign-root ul { list-style: none; }
+
+#umt-redesign-root a:focus-visible,
+#umt-redesign-root button:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+/* ── Glass surfaces ── */
+#umt-redesign-root .umt-sidebar,
+#umt-redesign-root .umt-header,
+#umt-redesign-root .umt-card,
+#umt-redesign-root .umt-strip,
+#umt-original-content {
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--shadow-glass);
+}
+
+/* ══════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════ */
+#umt-redesign-root .umt-sidebar {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  height: calc(100vh - 24px);
+  margin: 12px 0 12px 12px;
+  position: sticky;
+  top: 12px;
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  z-index: 100;
+  transition: width 0.35s var(--ease), min-width 0.35s var(--ease);
+}
+
+#umt-redesign-root .umt-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 20px 14px;
+  flex-shrink: 0;
+}
+#umt-redesign-root .umt-mark {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  object-fit: contain;
+  -webkit-user-drag: none;
+}
+#umt-redesign-root .umt-brand-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.15;
+}
+#umt-redesign-root .umt-brand-name {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  color: var(--text);
+}
+#umt-redesign-root .umt-brand-sub {
+  font-size: 12px;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+#umt-redesign-root .umt-nav {
+  flex: 1;
+  padding: 6px 10px 14px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+#umt-redesign-root .umt-nav::-webkit-scrollbar { display: none; }
+
+#umt-redesign-root .umt-nav-item + .umt-nav-item { margin-top: 2px; }
+
+#umt-redesign-root .umt-nav-item > a,
+#umt-redesign-root .umt-nav-item > button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  color: var(--text-2);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+#umt-redesign-root .umt-nav-item > a:hover,
+#umt-redesign-root .umt-nav-item > button:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text);
+}
+#umt-redesign-root .umt-nav-item.active > a,
+#umt-redesign-root .umt-nav-item.active > button {
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-weight: 600;
+}
+
+#umt-redesign-root .umt-nav-icon {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+#umt-redesign-root .umt-nav-label { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+#umt-redesign-root .umt-nav-arrow {
+  font-size: 16px;
+  color: var(--text-3);
+  transition: transform 0.3s var(--ease);
+}
+#umt-redesign-root .umt-nav-item.open > button .umt-nav-arrow { transform: rotate(180deg); }
+
+/* Sub-menu */
+#umt-redesign-root .umt-nav-sub {
+  max-height: 0;
+  overflow: hidden;
+  margin: 0 0 0 22px;
+  border-left: 1px solid var(--hairline);
+  transition: max-height 0.35s var(--ease);
+}
+#umt-redesign-root .umt-nav-item.open .umt-nav-sub {
+  max-height: 320px;
+  margin: 2px 0 6px 22px;
+}
+#umt-redesign-root .umt-nav-sub li a {
+  display: block;
+  padding: 8px 12px 8px 22px;
+  border-radius: 10px;
+  color: var(--text-3);
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+#umt-redesign-root .umt-nav-sub li a:hover { background: rgba(0, 0, 0, 0.05); color: var(--text); }
+#umt-redesign-root .umt-nav-sub li.sub-active a { color: var(--blue); background: var(--blue-soft); }
+
+/* Collapsed sidebar (icon rail) */
+#umt-redesign-root.sidebar-collapsed { --sidebar-w: 76px; }
+#umt-redesign-root.sidebar-collapsed .umt-brand { justify-content: center; padding: 20px 0 14px; }
+#umt-redesign-root.sidebar-collapsed .umt-brand-text,
+#umt-redesign-root.sidebar-collapsed .umt-nav-label,
+#umt-redesign-root.sidebar-collapsed .umt-nav-arrow,
+#umt-redesign-root.sidebar-collapsed .umt-nav-sub { display: none !important; }
+#umt-redesign-root.sidebar-collapsed .umt-nav-item > a,
+#umt-redesign-root.sidebar-collapsed .umt-nav-item > button { justify-content: center; padding: 0; }
+
+/* ══════════════════════════════════════
+   MAIN COLUMN + HEADER
+══════════════════════════════════════ */
+#umt-redesign-root .umt-main {
+  flex: 1;
+  min-width: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0 12px;
+}
+
+#umt-redesign-root .umt-header {
+  position: sticky;
+  top: 12px;
+  z-index: 99;
+  height: var(--header-h);
+  margin-top: 12px;
+  padding: 0 12px 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  border-radius: 22px;
+  /* a touch more opaque than other glass so content scrolling under it stays quiet */
+  background: rgba(255, 255, 255, 0.78);
+}
+
+#umt-redesign-root .umt-icon-btn {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-2);
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+#umt-redesign-root .umt-icon-btn:hover { background: rgba(0, 0, 0, 0.09); color: var(--text); }
+#umt-redesign-root .umt-header-toggle { border-radius: 12px; background: none; }
+
+#umt-redesign-root .umt-header-title {
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+/* Announcement ticker */
+#umt-redesign-root .umt-ticker {
+  flex: 1;
+  min-width: 0;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 0 4px;
+  border-radius: 980px;
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-3);
+  font-size: 12.5px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+#umt-redesign-root .umt-ticker-track {
+  display: inline-block;
+  padding-left: 100%;
+  white-space: nowrap;
+  animation: umt-ticker 40s linear infinite;
+}
+#umt-redesign-root .umt-ticker:hover .umt-ticker-track { animation-play-state: paused; }
+@keyframes umt-ticker { to { transform: translateX(-100%); } }
+
+#umt-redesign-root .umt-header-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#umt-redesign-root .umt-avatar {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #4aa8ff, #0a5fd6);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 3px 8px rgba(0, 90, 220, 0.30);
+}
+
+/* ── Content area (scrolls with the page, no inner scroll trap) ── */
+#umt-redesign-root .umt-content {
+  flex: 1;
+  padding: 16px 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ══════════════════════════════════════
+   HERO – campus photo with a glass panel
+══════════════════════════════════════ */
+#umt-redesign-root .umt-hero {
+  position: relative;
+  min-height: 360px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-end;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  background: linear-gradient(135deg, #0a3a8a 0%, #0071e3 100%) center 72% / cover no-repeat;
+  box-shadow: 0 20px 50px rgba(20, 30, 60, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+#umt-redesign-root .umt-hero-panel {
+  width: min(540px, 100%);
+  padding: 32px 34px 30px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.58);
+  -webkit-backdrop-filter: blur(30px) saturate(190%);
+  backdrop-filter: blur(30px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 18px 50px rgba(0, 20, 60, 0.22);
+  animation: umt-rise 0.7s var(--ease) both;
+}
+@keyframes umt-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+#umt-redesign-root .umt-hero-title {
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  color: var(--text);
+}
+#umt-redesign-root .umt-hero-sub {
+  max-width: 44ch;
+  margin-top: 12px;
+  font-size: 16px;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: var(--text-2);
+}
+#umt-redesign-root .umt-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+/* Pill buttons */
+#umt-redesign-root .umt-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 980px;
+  border: 1px solid transparent;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+#umt-redesign-root .umt-btn .umt-i { font-size: 16px; }
+#umt-redesign-root .umt-btn-primary { background: var(--blue); color: #fff !important; }
+#umt-redesign-root .umt-btn-primary:hover { background: var(--blue-hover); }
+#umt-redesign-root .umt-btn-primary:active { background: var(--blue-press); }
+#umt-redesign-root .umt-btn-secondary {
+  background: rgba(255, 255, 255, 0.55);
+  border-color: rgba(0, 113, 227, 0.55);
+  color: var(--blue) !important;
+}
+#umt-redesign-root .umt-btn-secondary:hover { background: #fff; border-color: var(--blue); }
+
+/* ══════════════════════════════════════
+   DASHBOARD CARDS
+══════════════════════════════════════ */
+#umt-redesign-root .umt-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+#umt-redesign-root .umt-card-academics { grid-column: 1 / -1; }
+
+#umt-redesign-root .umt-card {
+  padding: 22px 24px 24px;
+  border-radius: var(--r-lg);
+}
+
+/* Per-card tint drives its list icons and tiles */
+#umt-redesign-root .umt-card-learning  { --tint: #248a3d; --tint-bg: rgba(52, 199, 89, 0.15); }
+#umt-redesign-root .umt-card-request   { --tint: #c93400; --tint-bg: rgba(255, 149, 0, 0.16); }
+#umt-redesign-root .umt-card-resources { --tint: #8944ab; --tint-bg: rgba(175, 82, 222, 0.14); }
+
+#umt-redesign-root .umt-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+#umt-redesign-root .umt-card-title-row { display: flex; align-items: center; gap: 12px; min-width: 0; }
+#umt-redesign-root .umt-card-title {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* Squircle "app icon" chips */
+#umt-redesign-root .umt-app-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  color: #fff;
+  font-size: 22px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 4px 10px rgba(0, 0, 0, 0.14);
+}
+#umt-redesign-root .umt-tone-blue   { background: linear-gradient(180deg, #4aa8ff, #0a69dc); }
+#umt-redesign-root .umt-tone-green  { background: linear-gradient(180deg, #5fdc7f, #26ab48); }
+#umt-redesign-root .umt-tone-orange { background: linear-gradient(180deg, #ffb340, #ff8a00); }
+#umt-redesign-root .umt-tone-purple { background: linear-gradient(180deg, #c98cff, #8a3fdc); }
+#umt-redesign-root .umt-tone-teal   { background: linear-gradient(180deg, #5ad6e8, #0a9db8); }
+
+#umt-redesign-root .umt-card-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--blue);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+#umt-redesign-root .umt-card-view-all .umt-i { font-size: 16px; transition: transform 0.2s var(--ease); }
+#umt-redesign-root .umt-card-view-all:hover .umt-i { transform: translateX(2px); }
+
+/* Academics tiles */
+#umt-redesign-root .umt-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+#umt-redesign-root .umt-tile {
+  --tint: var(--blue);
+  --tint-bg: var(--blue-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 10px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--hairline);
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--text) !important;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-align: center;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+#umt-redesign-root .umt-tile[data-tone="purple"] { --tint: #8944ab; --tint-bg: rgba(175, 82, 222, 0.14); }
+#umt-redesign-root .umt-tile[data-tone="green"]  { --tint: #248a3d; --tint-bg: rgba(52, 199, 89, 0.15); }
+#umt-redesign-root .umt-tile[data-tone="orange"] { --tint: #c93400; --tint-bg: rgba(255, 149, 0, 0.16); }
+#umt-redesign-root .umt-tile:hover { background: #fff; box-shadow: 0 10px 28px rgba(20, 30, 60, 0.10); }
+#umt-redesign-root .umt-tile-icon {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: var(--tint-bg);
+  color: var(--tint);
+  font-size: 24px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+#umt-redesign-root .umt-tile:hover .umt-tile-icon { background: var(--tint); color: #fff; }
+
+/* Link lists */
+#umt-redesign-root .umt-item-list { display: flex; flex-direction: column; }
+#umt-redesign-root .umt-item-list li + li { border-top: 1px solid var(--hairline); }
+#umt-redesign-root .umt-item-list li a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 6px;
+  border-radius: 14px;
+  color: var(--text);
+  font-size: 14.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: background 0.2s ease;
+}
+#umt-redesign-root .umt-item-list li a:hover { background: rgba(0, 0, 0, 0.04); }
+#umt-redesign-root .umt-item-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--tint-bg);
+  color: var(--tint);
+  font-size: 18px;
+}
+#umt-redesign-root .umt-item-label { flex: 1; min-width: 0; }
+#umt-redesign-root .umt-item-chev { margin-left: auto; font-size: 16px; color: var(--text-3); opacity: 0.55; }
+
+/* ══════════════════════════════════════
+   TIMETABLE & REGISTERED COURSES (accordions)
+══════════════════════════════════════ */
+#umt-redesign-root .umt-strip { border-radius: var(--r-lg); overflow: hidden; }
+
+#umt-redesign-root .umt-strip-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px 24px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+#umt-redesign-root .umt-strip-header:hover { background: rgba(255, 255, 255, 0.5); }
+#umt-redesign-root .umt-strip-label {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+#umt-redesign-root .umt-strip-btn {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--blue);
+  font-size: 14px;
+  font-weight: 500;
+}
+#umt-redesign-root .umt-strip-btn .umt-i { font-size: 16px; transition: transform 0.3s var(--ease); }
+#umt-redesign-root .umt-strip.is-open .umt-strip-btn .umt-i { transform: rotate(180deg); }
+#umt-redesign-root .umt-strip-hide { display: none; }
+#umt-redesign-root .umt-strip.is-open .umt-strip-show { display: none; }
+#umt-redesign-root .umt-strip.is-open .umt-strip-hide { display: inline; }
+
+/* Smooth open/close without measuring heights */
+#umt-redesign-root .umt-strip-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s var(--ease);
+}
+#umt-redesign-root .umt-strip-body.open { grid-template-rows: 1fr; }
+#umt-redesign-root .umt-strip-inner {
+  min-height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  border-top: 1px solid transparent;
+  transition: visibility 0s linear 0.4s;
+}
+#umt-redesign-root .umt-strip-body.open .umt-strip-inner {
+  visibility: visible;
+  border-top-color: var(--hairline);
+  transition-delay: 0s;
+}
+
+#umt-redesign-root .umt-table-wrap { overflow-x: auto; padding: 8px 12px 14px; }
+#umt-redesign-root .umt-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13.5px;
+}
+#umt-redesign-root .umt-table th {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--text-3);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+#umt-redesign-root .umt-table td {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--text);
+  vertical-align: middle;
+}
+#umt-redesign-root .umt-table tr:last-child td { border-bottom: 0; }
+#umt-redesign-root .umt-table tbody tr:hover td { background: rgba(0, 113, 227, 0.045); }
+#umt-redesign-root .umt-table .umt-td-muted { color: var(--text-3); font-size: 12.5px; }
+#umt-redesign-root .umt-table .umt-td-center { text-align: center; }
+
+#umt-redesign-root .umt-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 980px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 600;
+}
+#umt-redesign-root .umt-badge.is-online { background: rgba(52, 199, 89, 0.16); color: #1f7a3a; }
+
+#umt-redesign-root .umt-empty { padding: 22px 26px; color: var(--text-3); font-size: 14px; }
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+#umt-redesign-root .umt-footer {
+  margin-top: auto;
+  padding: 22px 12px 26px;
+  color: var(--text-3);
+  font-size: 12px;
+  text-align: center;
+}
+#umt-redesign-root .umt-footer a { color: var(--text-2); }
+#umt-redesign-root .umt-footer a:hover { color: var(--blue); }
+
+/* ══════════════════════════════════════
+   PROFILE POPOVER
+══════════════════════════════════════ */
+#umt-redesign-root .umt-profile-panel {
+  display: none;
+  position: fixed;
+  top: 84px;
+  right: 24px;
+  width: 288px;
+  padding: 8px;
+  z-index: 300;
+  border-radius: 22px;
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: blur(36px) saturate(190%);
+  backdrop-filter: blur(36px) saturate(190%);
+  border: 1px solid var(--glass-edge);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 24px 60px rgba(20, 30, 60, 0.20), 0 2px 6px rgba(20, 30, 60, 0.08);
+}
+#umt-redesign-root .umt-profile-panel.is-open { display: block; animation: umt-pop 0.22s var(--ease); }
+@keyframes umt-pop {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+#umt-redesign-root .umt-profile-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 12px;
+  border-bottom: 1px solid var(--hairline);
+  margin-bottom: 6px;
+}
+#umt-redesign-root .umt-profile-head .umt-avatar { width: 44px; height: 44px; font-size: 15px; cursor: default; }
+#umt-redesign-root .umt-profile-name { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+#umt-redesign-root .umt-profile-id { font-size: 12.5px; color: var(--text-3); }
+#umt-redesign-root .umt-profile-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+#umt-redesign-root .umt-profile-row .umt-i { font-size: 19px; color: var(--text-3); }
+#umt-redesign-root .umt-profile-row:hover { background: rgba(0, 0, 0, 0.05); }
+#umt-redesign-root .umt-profile-row.is-danger { color: #d70015; }
+#umt-redesign-root .umt-profile-row.is-danger .umt-i { color: #d70015; }
+
+/* ══════════════════════════════════════
+   INNER PAGES (portal content rendered inside our shell)
+══════════════════════════════════════ */
+#umt-original-content {
+  flex: 1;
+  margin: 16px 0 0;
+  padding: 24px;
+  border-radius: var(--r-xl);
+  font-family: var(--font) !important;
+  color: var(--text);
+}
+#umt-original-content .wrapper,
+#umt-original-content #content {
+  display: block !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+#umt-original-content #sidebar,
+#umt-original-content .navbar.navbar-default,
+#umt-original-content .copyright-w3layouts { display: none !important; }
+#umt-original-content .outer-w3-agile { padding: 0 !important; }
+
+#umt-original-content h1,
+#umt-original-content h2,
+#umt-original-content h3,
+#umt-original-content h4,
+#umt-original-content h5 {
+  font-family: var(--font) !important;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  color: var(--text);
+}
+#umt-original-content a { color: var(--blue); }
+#umt-original-content table { font-family: var(--font); font-size: 13.5px; }
+#umt-original-content .table > thead > tr > th {
+  color: var(--text-3);
+  font-size: 12px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--hairline) !important;
+  background: transparent !important;
+}
+#umt-original-content .table > tbody > tr > td,
+#umt-original-content .table > tbody > tr > th {
+  border-top: 1px solid var(--hairline) !important;
+  vertical-align: middle;
+}
+#umt-original-content .table-striped > tbody > tr:nth-of-type(odd) { background: rgba(0, 0, 0, 0.02); }
+#umt-original-content .table-hover > tbody > tr:hover { background: rgba(0, 113, 227, 0.05); }
+
+#umt-original-content .panel {
+  border: 1px solid var(--hairline);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 2px 12px rgba(20, 30, 60, 0.05);
+  overflow: hidden;
+}
+#umt-original-content .panel-heading {
+  padding: 14px 20px !important;
+  border-bottom: 1px solid var(--hairline);
+  border-radius: 0 !important;
+  background: rgba(255, 255, 255, 0.55) !important;
+}
+#umt-original-content .panel-title,
+#umt-original-content .panel-title a {
+  color: var(--text) !important;
+  font-family: var(--font) !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+
+#umt-original-content .form-control,
+#umt-original-content select,
+#umt-original-content textarea,
+#umt-original-content input[type="text"],
+#umt-original-content input[type="password"],
+#umt-original-content input[type="email"],
+#umt-original-content input[type="number"],
+#umt-original-content input[type="date"] {
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  box-shadow: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+#umt-original-content textarea { height: auto; padding: 10px 14px; }
+#umt-original-content .form-control:focus,
+#umt-original-content select:focus,
+#umt-original-content textarea:focus,
+#umt-original-content input:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.18);
+}
+
+#umt-original-content .btn {
+  padding: 8px 18px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--text);
+  border-radius: 980px !important;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+#umt-original-content .btn-primary,
+#umt-original-content .btn-info,
+#umt-original-content .btn-success {
+  background: var(--blue) !important;
+  border-color: var(--blue) !important;
+  color: #fff !important;
+}
+#umt-original-content .btn-primary:hover,
+#umt-original-content .btn-info:hover,
+#umt-original-content .btn-success:hover { background: var(--blue-hover) !important; }
+#umt-original-content .btn-danger { background: #ff3b30 !important; border-color: #ff3b30 !important; color: #fff !important; }
+#umt-original-content .btn-default {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  color: var(--text) !important;
+}
+
+#umt-original-content .alert { border: 0; border-radius: 16px; }
+#umt-original-content .nav-tabs { border-bottom: 1px solid var(--hairline); }
+#umt-original-content .nav-tabs > li > a { border: 0 !important; border-radius: 12px 12px 0 0; color: var(--text-2); }
+#umt-original-content .nav-tabs > li.active > a { color: var(--blue); background: var(--blue-soft) !important; }
+#umt-original-content .modal-content { border: 0; border-radius: 24px; box-shadow: 0 30px 80px rgba(20, 30, 60, 0.28); }
+
+/* ══════════════════════════════════════
+   DASHBOARD / TEAM VIEW SWITCH + TEAM PAGE
+══════════════════════════════════════ */
+#umt-redesign-root .umt-dash-only { display: flex; flex-direction: column; gap: 16px; }
+#umt-redesign-root.view-team .umt-dash-only { display: none; }
+#umt-redesign-root .umt-team { display: none; }
+#umt-redesign-root.view-team .umt-team { display: block; }
+
+#umt-redesign-root .umt-team-title {
+  padding: 14px 6px 22px;
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  color: var(--text);
+}
+#umt-redesign-root .umt-team-list { display: flex; flex-direction: column; gap: 12px; }
+
+/* Three fixed columns (name | email | arrow) so every box lines up the same way */
+#umt-redesign-root .umt-team-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) 24px;
+  align-items: center;
+  column-gap: 24px;
+  padding: 24px 28px;
+  border-radius: var(--r-lg);
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--shadow-glass);
+  color: var(--text);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+#umt-redesign-root .umt-team-card:hover {
+  background: var(--glass-strong);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 14px 36px rgba(20, 30, 60, 0.12);
+}
+#umt-redesign-root .umt-team-name {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+#umt-redesign-root .umt-team-email {
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  color: var(--text-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#umt-redesign-root .umt-team-arrow {
+  font-size: 22px;
+  color: var(--text-3);
+  transition: transform 0.25s var(--ease), color 0.2s ease;
+}
+#umt-redesign-root .umt-team-card:hover .umt-team-arrow { color: var(--blue); transform: translateX(3px); }
+
+@media (max-width: 640px) {
+  #umt-redesign-root .umt-team-card {
+    grid-template-columns: minmax(0, 1fr) 24px;
+    row-gap: 4px;
+    padding: 18px 20px;
+  }
+  #umt-redesign-root .umt-team-arrow { grid-column: 2; grid-row: 1 / span 2; }
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+#umt-redesign-root .umt-scrim { display: none; }
+
+@media (max-width: 1100px) {
+  #umt-redesign-root .umt-cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #umt-redesign-root .umt-card-resources { grid-column: 1 / -1; }
+  #umt-redesign-root .umt-tile-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 900px) {
+  #umt-redesign-root .umt-ticker { display: none; }
+}
+
+@media (max-width: 768px) {
+  #umt-redesign-root .umt-sidebar {
+    position: fixed;
+    top: 12px;
+    left: -300px;
+    width: 264px;
+    min-width: 264px;
+    margin: 0;
+    z-index: 200;
+    background: rgba(255, 255, 255, 0.92);
+    transition: left 0.35s var(--ease);
+  }
+  #umt-redesign-root.sidebar-mobile-open .umt-sidebar { left: 12px; }
+  #umt-redesign-root.sidebar-mobile-open .umt-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 150;
+    background: rgba(0, 0, 0, 0.28);
+  }
+  #umt-redesign-root .umt-main { width: 100%; padding: 0 10px; }
+  #umt-redesign-root .umt-header { margin-top: 10px; top: 10px; }
+  #umt-redesign-root .umt-header { gap: 8px; padding: 0 10px 0 6px; }
+  #umt-redesign-root .umt-header-actions { gap: 6px; flex-shrink: 0; }
+  #umt-redesign-root .umt-cards-grid { grid-template-columns: 1fr; }
+  #umt-redesign-root .umt-card-resources { grid-column: auto; }
+  #umt-redesign-root .umt-hero { min-height: 320px; padding: 12px; }
+  #umt-redesign-root .umt-hero-panel { padding: 24px 22px 22px; }
+  #umt-redesign-root .umt-profile-panel { right: 12px; top: 78px; }
+  #umt-original-content { padding: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #umt-redesign-root *,
+  #umt-redesign-root *::before,
+  #umt-redesign-root *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  #umt-redesign-root .umt-ticker-track { padding-left: 0; overflow: hidden; text-overflow: ellipsis; }
+  #umt-redesign-root .umt-ticker { display: flex; }
+}
+
+/* ════════════════════════════════════════════════════════════
+   LOGIN / SIGN-IN PAGE
+   Glass card over the campus photo. The real #loginform, captcha
+   and submit button are untouched: only restyled and reordered
+   visually (flex `order`), so validation / captcha / POST still work.
+══════════════════════════════════════════════════════════════ */
+body.umt-login-redesigned {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  background-color: #0b1f44 !important;
+  background-image:
+    linear-gradient(180deg, rgba(6, 18, 44, 0.20) 0%, rgba(6, 18, 44, 0.06) 45%, rgba(6, 18, 44, 0.34) 100%),
+    var(--umt-campus, none) !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+}
+
+/* Hide anything that isn't the login card itself */
+body.umt-login-redesigned .copyright-w3layouts,
+body.umt-login-redesigned #sidebar,
+body.umt-login-redesigned .navbar.navbar-default { display: none !important; }
+
+/* Centre the card in the viewport */
+body.umt-login-redesigned .container-fluid.text-center {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+body.umt-login-redesigned .container-fluid.text-center > .row {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+}
+body.umt-login-redesigned .container-fluid.text-center > .row > .col-md-4 {
+  flex: 0 0 auto;
+  width: auto;
+  padding: 0;
+}
+body.umt-login-redesigned .container-fluid.text-center > .row > .col-md-4:empty { display: none; }
+
+/* ── The glass card ── */
+body.umt-login-redesigned .wrap-login100 {
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  padding: 40px 32px 30px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: visible !important;
+  border-radius: 32px !important;
+  background: rgba(255, 255, 255, 0.58) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(190%);
+  backdrop-filter: blur(40px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9),
+              0 30px 80px rgba(3, 15, 40, 0.38),
+              0 2px 6px rgba(3, 15, 40, 0.12) !important;
+}
+
+/* Logo in a clean round badge */
+body.umt-login-redesigned .umt-login-logo {
+  order: -1;
+  display: block;
+  width: 76px !important;
+  height: 76px !important;
+  margin: 0 auto 18px !important;
+  padding: 7px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(3, 15, 40, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+body.umt-login-redesigned .login100-form-title {
+  display: block;
+  width: 100%;
+  margin: 0 0 26px !important;
+  padding: 0 !important;
+  font-family: var(--font) !important;
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-transform: none;
+  color: var(--text) !important;
+  text-align: center;
+}
+body.umt-login-redesigned .login100-form-title::after {
+  content: "UMT Student Portal";
+  display: block;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--text-2);
+}
+
+body.umt-login-redesigned #loginform {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Username / password / security-code fields ──
+   The icon lives in a fixed 50px gutter on the left and the input
+   text starts after it, so the two can never overlap. The portal's own
+   stylesheet gives .symbol-input100 width:100% and a large left padding,
+   so every box-model property is reset explicitly here. */
+body.umt-login-redesigned .wrap-input100 {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  margin: 0 0 12px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+body.umt-login-redesigned .wrap-input100:has(#student_id) { order: 1; }
+body.umt-login-redesigned .wrap-input100:has(#Password)   { order: 2; }
+
+body.umt-login-redesigned .input100 {
+  display: block !important;
+  width: 100% !important;
+  height: 52px !important;
+  margin: 0 !important;
+  padding: 0 16px 0 50px !important;
+  text-indent: 0 !important;
+  line-height: normal !important;
+  border: 1px solid rgba(0, 0, 0, 0.10) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: var(--text) !important;
+  font: 400 16px/1.2 var(--font) !important;
+  letter-spacing: -0.01em;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+body.umt-login-redesigned .input100::placeholder { color: #86868b; opacity: 1; }
+body.umt-login-redesigned .input100:focus {
+  background: #fff !important;
+  border-color: var(--blue) !important;
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.22) !important;
+}
+body.umt-login-redesigned .input100:-webkit-autofill,
+body.umt-login-redesigned .input100:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text);
+  caret-color: var(--text);
+  -webkit-box-shadow: 0 0 0 1000px #eaf2ff inset !important;
+  transition: background-color 9999s ease-out 0s;
+}
+
+body.umt-login-redesigned .symbol-input100 {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 50px !important;
+  height: 52px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border: 0 !important;
+  background: none !important;
+  color: #86868b !important;
+  font-size: 19px !important;
+  line-height: 1 !important;
+  pointer-events: none;
+  z-index: 2;
+  transition: color 0.2s ease;
+}
+body.umt-login-redesigned .symbol-input100 > i,
+body.umt-login-redesigned .symbol-input100 > .fa { display: none !important; }
+body.umt-login-redesigned .symbol-input100 .umt-i { font-size: 19px; }
+body.umt-login-redesigned .wrap-input100:focus-within .symbol-input100 { color: var(--blue) !important; }
+body.umt-login-redesigned .focus-input100 { display: none !important; }
+
+/* Show / hide password */
+body.umt-login-redesigned #Password { padding-right: 48px !important; }
+body.umt-login-redesigned .umt-eye {
+  position: absolute;
+  top: 0;
+  right: 4px;
+  width: 44px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: none;
+  color: #6e6e73;
+  font-size: 19px;
+  cursor: pointer;
+  z-index: 3;
+  border-radius: 12px;
+}
+body.umt-login-redesigned .umt-eye:hover { color: var(--text); }
+body.umt-login-redesigned .umt-eye:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+
+/* Forgot password / Create account / Alumni links */
+body.umt-login-redesigned #loginform > .container-fluid {
+  width: 100%;
+  padding: 0 !important;
+  margin: 0;
+  order: 6;
+}
+body.umt-login-redesigned #loginform > .container-fluid:has(a[href="/Account/ForgotPassword"]) {
+  order: 3;
+  text-align: right;
+  margin-bottom: 14px !important;
+}
+body.umt-login-redesigned #loginform > .container-fluid:has(a[href="/Account/Register"]),
+body.umt-login-redesigned #loginform > .container-fluid:has(a[href="/Account/AlumniAccess"]) {
+  order: 6;
+  text-align: center;
+  margin-top: 6px !important;
+}
+body.umt-login-redesigned #loginform > .container-fluid a.account {
+  float: none !important;
+  display: inline-block;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--blue) !important;
+  text-decoration: none;
+}
+body.umt-login-redesigned #loginform > .container-fluid a.account:hover { text-decoration: underline; }
+
+/* Security code + captcha row */
+body.umt-login-redesigned #loginform > .row {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+  margin: 0 0 18px !important;
+  order: 4;
+}
+body.umt-login-redesigned #loginform > .row > .col-md-6 {
+  flex: 1;
+  width: auto;
+  min-width: 0;
+  padding: 0 !important;
+}
+body.umt-login-redesigned #loginform > .row .wrap-input100 { margin: 0 !important; }
+body.umt-login-redesigned #SecurityCode {
+  padding: 0 14px !important;
+  text-align: center;
+  text-transform: none;
+  letter-spacing: 2px;
+}
+body.umt-login-redesigned #SecurityCode::placeholder {
+  text-transform: none;
+  letter-spacing: normal;
+}
+body.umt-login-redesigned #loginform > .row .wrap-input100:has(#SecurityCode) .symbol-input100 { display: none !important; }
+body.umt-login-redesigned .captcha {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 52px;
+  box-sizing: border-box;
+  border: 1px dashed rgba(0, 0, 0, 0.22);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  user-select: none;
+}
+
+/* Submit button */
+body.umt-login-redesigned .container-login100-form-btn {
+  width: 100%;
+  order: 5;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+body.umt-login-redesigned .login100-form-btn {
+  width: 100%;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #1a86ff 0%, #0071e3 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 10px 24px rgba(0, 113, 227, 0.34);
+  color: #fff;
+  font-family: var(--font);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.15s ease;
+}
+body.umt-login-redesigned .login100-form-btn:hover { filter: brightness(1.06); }
+body.umt-login-redesigned .login100-form-btn:active { transform: scale(0.99); }
+body.umt-login-redesigned .login100-form-btn:focus-visible { outline: 3px solid rgba(255, 255, 255, 0.9); outline-offset: 2px; }
+body.umt-login-redesigned .login100-form-btn:disabled { cursor: default; opacity: 0.85; }
+body.umt-login-redesigned .login100-form-btn img { height: 22px !important; width: 22px !important; }
+
+/* Floating PRS chatbot shortcut */
+body.umt-login-redesigned .umt-chatbot {
+  position: fixed !important;
+  right: 20px !important;
+  bottom: 20px !important;
+  left: auto !important;
+  top: auto !important;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 10px 30px rgba(3, 15, 40, 0.30);
+  transition: transform 0.25s var(--ease);
+}
+body.umt-login-redesigned .umt-chatbot img {
+  position: static !important;
+  width: 30px !important;
+  height: 30px !important;
+  margin: 0 !important;
+  object-fit: contain;
+}
+body.umt-login-redesigned .umt-chatbot:hover { transform: scale(1.07); }
+
+@media (max-width: 480px) {
+  body.umt-login-redesigned .wrap-login100 { padding: 32px 22px 26px !important; border-radius: 28px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.umt-login-redesigned *,
+  body.umt-login-redesigned *::before,
+  body.umt-login-redesigned *::after { transition: none !important; }
+}
+
+/* ══════════════════════════════════════
+   TIMETABLE – day columns with time-ordered slot cards
+══════════════════════════════════════ */
+#umt-redesign-root .umt-tt-days {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 18px;
+  padding: 14px 18px 20px;
+  align-items: start;
+}
+#umt-redesign-root .umt-tt-day {
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--r-lg);
+  padding: 14px 14px 10px;
+}
+#umt-redesign-root .umt-tt-day-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 2px 4px 12px;
+}
+#umt-redesign-root .umt-tt-day-head h3 {
+  font-size: 17px; font-weight: 650; letter-spacing: -0.01em; color: var(--text);
+}
+#umt-redesign-root .umt-tt-day-head span {
+  font-size: 11.5px; color: var(--text-3);
+  background: rgba(0, 0, 0, 0.05); padding: 3px 10px; border-radius: 980px;
+}
+#umt-redesign-root .umt-tt-slots { display: flex; flex-direction: column; gap: 12px; }
+
+#umt-redesign-root .umt-slot {
+  display: grid;
+  grid-template-columns: 62px 1fr;
+  gap: 10px;
+  align-items: start;
+}
+#umt-redesign-root .umt-slot-time { padding-top: 10px; text-align: right; line-height: 1.25; }
+#umt-redesign-root .umt-slot-start { display: block; font-size: 14px; font-weight: 650; color: var(--text); }
+#umt-redesign-root .umt-slot-start small { font-size: 9.5px; font-weight: 600; margin-left: 2px; color: var(--text-2); }
+#umt-redesign-root .umt-slot-end { display: block; font-size: 10.5px; color: var(--text-3); margin-top: 2px; }
+
+#umt-redesign-root .umt-slot-card {
+  background: rgba(0, 113, 227, 0.07);
+  border: 1px solid rgba(0, 113, 227, 0.10);
+  border-radius: var(--r-md);
+  padding: 11px 13px 12px;
+}
+#umt-redesign-root .umt-slot-card.is-lab {
+  background: rgba(52, 199, 89, 0.10);
+  border-color: rgba(52, 199, 89, 0.16);
+}
+#umt-redesign-root .umt-slot-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+#umt-redesign-root .umt-slot-code { font-size: 11.5px; font-weight: 700; letter-spacing: 0.02em; color: #2d4fbf; }
+#umt-redesign-root .umt-slot-card.is-lab .umt-slot-code { color: #1f7a3a; }
+#umt-redesign-root .umt-slot-type {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 600; color: #2d4fbf;
+}
+#umt-redesign-root .umt-slot-type i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+#umt-redesign-root .umt-slot-card.is-lab .umt-slot-type { color: #1f7a3a; }
+#umt-redesign-root .umt-slot-name { font-size: 14.5px; font-weight: 600; line-height: 1.3; color: var(--text); margin-bottom: 6px; }
+#umt-redesign-root .umt-slot-meta {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--text-2); margin-top: 3px;
+}
+#umt-redesign-root .umt-slot-meta .umt-i { font-size: 13px; color: var(--text-3); }
+#umt-redesign-root .umt-slot-foot { margin-top: 8px; }
+
+@media (max-width: 768px) {
+  #umt-redesign-root .umt-tt-days { grid-template-columns: 1fr; padding: 10px 10px 16px; gap: 14px; }
+  #umt-redesign-root .umt-slot { grid-template-columns: 54px 1fr; gap: 8px; }
+}

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DeyKode</title>
+<link rel="icon" href="assets/icons/icon48.png">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:      #1d1d1f;
+    --ink-soft: #6e6e73;
+    --hairline: #d2d2d7;
+    --bg:       #f5f5f7;
+    --card:     #ffffff;
+    --blue:     #0071e3;
+    --shadow:   0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+    --shadow-hover: 0 2px 4px rgba(0,0,0,.05), 0 16px 40px rgba(0,0,0,.10);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink:      #f5f5f7;
+      --ink-soft: #a1a1a6;
+      --hairline: #3a3a3c;
+      --bg:       #000000;
+      --card:     #1c1c1e;
+      --blue:     #2997ff;
+      --shadow:   0 1px 2px rgba(0,0,0,.4);
+      --shadow-hover: 0 12px 32px rgba(0,0,0,.6);
+    }
+  }
+
+  html, body { min-height: 100%; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 16px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .brand { text-align: center; margin-bottom: 40px; }
+  .brand img { width: 72px; height: 72px; border-radius: 18px; margin-bottom: 16px; }
+  .brand h1 { font-size: 34px; font-weight: 700; letter-spacing: -0.02em; }
+  .brand p  { margin-top: 6px; font-size: 16px; color: var(--ink-soft); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 180px);
+    gap: 20px;
+  }
+  @media (max-width: 620px) {
+    .grid { grid-template-columns: repeat(2, minmax(0, 160px)); }
+  }
+  @media (max-width: 360px) {
+    .grid { grid-template-columns: minmax(0, 200px); }
+  }
+
+  .tile {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    color: var(--ink);
+    text-decoration: none;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); border-color: transparent; }
+  .tile:active { transform: scale(.98); }
+  .tile:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+
+  .tile-icon {
+    width: 56px; height: 56px;
+    border-radius: 16px;
+    display: grid; place-items: center;
+    color: #fff;
+  }
+  .tile-icon svg {
+    width: 28px; height: 28px;
+    fill: none; stroke: currentColor; stroke-width: 2;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .instagram .tile-icon { background: linear-gradient(45deg, #f9a825, #e1306c 50%, #833ab4); }
+  .linkedin  .tile-icon { background: #0a66c2; }
+  .website   .tile-icon { background: var(--blue); }
+
+  .tile-label { font-size: 16px; font-weight: 600; }
+  .tile-sub   { font-size: 12.5px; color: var(--ink-soft); margin-top: -10px; }
+
+  footer { margin-top: 48px; font-size: 12px; color: var(--ink-soft); }
+
+  .back {
+    position: fixed;
+    top: 20px; left: 20px;
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 8px 16px 8px 10px;
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+    color: var(--blue);
+    font-size: 15px; font-weight: 500;
+    text-decoration: none;
+    transition: box-shadow .2s ease, transform .2s ease;
+  }
+  .back:hover  { box-shadow: var(--shadow-hover); }
+  .back:active { transform: scale(.97); }
+  .back:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+  .back svg {
+    width: 20px; height: 20px;
+    fill: none; stroke: currentColor; stroke-width: 2.2;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  @media (max-width: 620px) {
+    body { padding-top: 80px; }
+    .back { top: 16px; left: 16px; }
+  }
+</style>
+</head>
+<body>
+  <a class="back" id="backBtn" href="https://online.umt.edu.pk/Home/Index" aria-label="Back to portal">
+    <svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg>
+    Back
+  </a>
+
+  <header class="brand">
+    <img src="assets/icons/logo.png" alt="">
+    <h1>DeyKode</h1>
+    <p>Follow us everywhere</p>
+  </header>
+
+  <main class="grid">
+    <a class="tile instagram" href="https://www.instagram.com/deykode?obrf=M2dzdTg0Zm04Yzh4&amp;utm_source=qr" target="_blank" rel="noopener">
+      <span class="tile-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg>
+      </span>
+      <span class="tile-label">Instagram</span>
+      <span class="tile-sub">@deykode</span>
+    </a>
+
+    <a class="tile linkedin" href="https://www.linkedin.com/in/anas-abdul-rehman-a04a532aa/" target="_blank" rel="noopener">
+      <span class="tile-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/></svg>
+      </span>
+      <span class="tile-label">LinkedIn</span>
+      <span class="tile-sub">Connect</span>
+    </a>
+
+    <a class="tile website" href="https://www.deykode.com" target="_blank" rel="noopener">
+      <span class="tile-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+      </span>
+      <span class="tile-label">Website</span>
+      <span class="tile-sub">deykode.com</span>
+    </a>
+  </main>
+
+  <footer>© 2026 DeyKode</footer>
+
+  <script src="deykode.js"></script>
+</body>
+</html>

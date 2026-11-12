@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UMT Portal Suite</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:        #1d1d1f;
+    --ink-soft:   #6e6e73;
+    --hairline:   #d2d2d7;
+    --fill:       #f5f5f7;
+    --fill-focus: #eef4ff;
+    --blue:       #0071e3;
+    --blue-hover: #0077ed;
+    --blue-press: #006edb;
+    --white:      #ffffff;
+    --green:      #1d8a4a;
+    --green-bg:   #ecf9f1;
+    --red:        #d70015;
+    --red-bg:     #fdecec;
+  }
+
+  html, body {
+    width: 360px;
+    background: var(--white);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif,
+                 "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 28px 24px 20px;
+    text-align: center;
+  }
+  .hero img {
+    /* width: 66px;
+    height: 66px; */
+    object-fit: contain;
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .hero p {
+    margin-top: 4px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+  }
+
+  /* ── FORM ── */
+  .form-body {
+    padding: 4px 24px 4px;
+  }
+
+  .saved-notice {
+    display: none;
+    font-size: 11.5px;
+    color: var(--blue);
+    text-align: center;
+    margin-bottom: 14px;
+    letter-spacing: -0.005em;
+  }
+  .saved-notice.show { display: block; }
+
+  .field {
+    position: relative;
+    margin-bottom: 15px;
+  }
+  .field-icon {
+    position: absolute;
+    left: 14px; top: 50%;
+    transform: translateY(-50%);
+    width: 18px; height: 18px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-soft);
+    pointer-events: none;
+  }
+  .field-icon svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+
+  .field input {
+    width: 100%;
+    padding: 12px 14px 12px 40px;
+    border: none;
+    border-radius: 11px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--ink);
+    background: var(--fill);
+    outline: none;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+  }
+  .field input::placeholder { color: #a1a1a6; }
+  .field input:focus {
+    background: var(--fill-focus);
+    box-shadow: 0 0 0 3.5px rgba(0,113,227,0.18);
+  }
+
+  .eye-btn {
+    position: absolute;
+    right: 12px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none;
+    cursor: pointer; padding: 4px;
+    color: var(--ink-soft);
+    display: flex; align-items: center;
+    transition: color 0.15s ease;
+  }
+  .eye-btn:hover { color: var(--ink); }
+  .eye-btn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+
+  .submit-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    text-align: center;
+    background: var(--blue);
+    color: var(--white);
+    border: none;
+    border-radius: 980px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.08s ease;
+  }
+  .submit-btn:hover  { background: var(--blue-hover); }
+  .submit-btn:active { background: var(--blue-press); transform: scale(0.99); }
+
+  #status {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 12px;
+    text-align: center;
+    display: none;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+  }
+  #status.success { background: var(--green-bg); color: var(--green); }
+  #status.error   { background: var(--red-bg);   color: var(--red); }
+  #status.info    { background: var(--fill);     color: var(--ink-soft); }
+
+  .clear-link {
+    display: block;
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    margin-top: 10px;
+    letter-spacing: -0.005em;
+  }
+  .clear-link:hover { color: var(--blue); }
+
+  /* ── DIVIDER SECTIONS ── */
+  .section {
+    padding: 16px 24px;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+  }
+
+  .toggle-wrap { position: relative; width: 40px; height: 24px; flex-shrink: 0; }
+  .toggle-wrap input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .toggle-track {
+    position: absolute; inset: 0;
+    background: #e9e9eb;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  .toggle-thumb {
+    position: absolute;
+    width: 20px; height: 20px;
+    background: var(--white);
+    border-radius: 50%;
+    top: 2px; left: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transition: left 0.2s ease;
+    pointer-events: none;
+  }
+  .toggle-wrap input:checked ~ .toggle-track { background: var(--green); }
+  .toggle-wrap input:checked ~ .toggle-thumb { left: 18px; }
+
+  .toggle-row + .toggle-row { margin-top: 14px; }
+
+  /* ── QUICK LINKS ── */
+  .quick-links-label {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+    margin-bottom: 10px;
+  }
+  .quick-links-row {
+    display: flex;
+    gap: 8px;
+  }
+  .quick-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 8px;
+    border: none;
+    border-radius: 11px;
+    background: var(--fill);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: -0.005em;
+    transition: background 0.15s ease;
+  }
+  .quick-btn:hover { background: #ebebed; }
+  .quick-btn svg {
+    width: 15px; height: 15px;
+    stroke: var(--ink-soft);
+    fill: none;
+    stroke-width: 1.8;
+    flex-shrink: 0;
+  }
+  .hero>img{
+
+  }
+  /* ── FOOTER ── */
+  .footer {
+    padding: 14px 24px 20px;
+    text-align: center;
+  }
+  .footer span {
+    font-size: 10.5px;
+    color: #aeaeb2;
+    letter-spacing: -0.005em;
+  }
+</style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <img src="assets/icons/icon128.png" alt="DeyKode">
+    <h1>UMT Portal Suite</h1>
+    <p>Sign in once, and we'll handle the rest</p>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-body">
+
+    <div class="saved-notice" id="savedNotice">
+      Credentials saved — will auto‑fill on next login
+    </div>
+
+    <!-- Student ID -->
+    <div class="field">
+      <div class="field-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </div>
+      <input type="text" id="studentId" placeholder="UMT Student ID / Email" autocomplete="off">
+    </div>
+
+    <!-- Password -->
+    <div class="field">
+      <div class="field-icon">
+        <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/></svg>
+      </div>
+      <input type="password" id="password" placeholder="Password" autocomplete="off">
+      <button class="eye-btn" id="eyeBtn" type="button" title="Show/Hide password">
+        <svg id="eyeIcon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+
+    <button class="submit-btn" id="submitBtn">Submit</button>
+
+    <div id="status"></div>
+    <span class="clear-link" id="clearLink" style="display:none;">Clear saved credentials</span>
+  </div>
+
+  <!-- QUICK LINKS -->
+  <div class="section">
+    <div class="quick-links-label">Quick Links</div>
+    <div class="quick-links-row">
+      <a class="quick-btn" id="lmsBtn" href="https://lms.umt.edu.pk" title="Open UMT LMS">
+        <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h6M9 11h4"/></svg>
+        LMS
+      </a>
+      <a class="quick-btn" id="financeBtn" href="https://www.instagram.com/deykode?obrf=M2dzdTg0Zm04Yzh4&amp;utm_source=qr" title="Follow for more">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg>
+        Follow for More
+      </a>
+    </div>
+  </div>
+
+  <!-- TOGGLES -->
+  <div class="section">
+    <div class="toggle-row">
+      <span>Auto‑solve on page load</span>
+      <label class="toggle-wrap">
+        <input type="checkbox" id="autoToggle" checked>
+        <div class="toggle-track"></div>
+        <div class="toggle-thumb"></div>
+      </label>
+    </div>
+    <div class="toggle-row">
+      <span>Portal redesign</span>
+      <label class="toggle-wrap">
+        <input type="checkbox" id="redesignToggle" checked>
+        <div class="toggle-track"></div>
+        <div class="toggle-thumb"></div>
+      </label>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>© 2026 DeyKode. All rights reserved.
+</span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
